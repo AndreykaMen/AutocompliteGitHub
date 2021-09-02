@@ -46,7 +46,7 @@ function showInputSelect(val) {
 function toLocalStorage(params) {
     for (key of arrayStart) {
         if (key.id == params) {
-            const localStorArr = JSON.parse(localStorage.getItem("objectShow")) || [];
+            const localStorArr = JSON.parse(sessionStorage.getItem("objectShow")) || [];
             // Перебираю массив из toLocalStorage
             const localId = localStorArr.map((el) => el.id);
             // Срвавниваю id входящий евент с имеющимся. Если нет такого , то пушим
@@ -58,7 +58,7 @@ function toLocalStorage(params) {
                     stars: key.watchers_count,
                 });
                 // Обновляю состояние localStorage
-                localStorage.setItem("objectShow", JSON.stringify(localStorArr));
+                sessionStorage.setItem("objectShow", JSON.stringify(localStorArr));
                 // Рендер нового списка
                 showInputSelect(localStorArr);
             } else {
@@ -87,13 +87,13 @@ async function sendAPI(e) {
 }
 // Удаление
 function closeItems(id) {
-    const devicesArray = JSON.parse(localStorage.getItem("objectShow"));
+    const devicesArray = JSON.parse(sessionStorage.getItem("objectShow"));
     devicesArray.splice(devicesArray.map((el) => el.id).indexOf(id), 1);
-    localStorage.setItem("objectShow", JSON.stringify(devicesArray));
+    sessionStorage.setItem("objectShow", JSON.stringify(devicesArray));
 }
 
 // Рендер списка из localStorage.Сохранить состояние
-showInputSelect(JSON.parse(localStorage.getItem("objectShow")) || []);
+showInputSelect(JSON.parse(sessionStorage.getItem("objectShow")) || []);
 
 sendAPI = debounce(sendAPI, 600);
 input.addEventListener("keyup", sendAPI);
@@ -102,7 +102,7 @@ document.addEventListener("click", (event) => {
     if (event.target.matches(".item_close")) {
         const idClose = event.target.closest(".main_list_item").id;
         closeItems(+idClose);
-        showInputSelect(JSON.parse(localStorage.getItem("objectShow")) || []);
+        showInputSelect(JSON.parse(sessionStorage.getItem("objectShow")) || []);
     }
     if (event.target.matches(".input_select_option")) {
         listPrimary.innerHTML = "";
@@ -110,3 +110,4 @@ document.addEventListener("click", (event) => {
         toLocalStorage(+event.target.id);
     }
 });
+localStorage
